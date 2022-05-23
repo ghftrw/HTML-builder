@@ -20,18 +20,12 @@ fs.stat(bundle, (err) => {
 fs.readdir(folder, { withFileTypes: true }, (err, files) => {
   files.forEach((file, i) => {
     if (file.isFile() && file.name.includes('.css')) {
-      fs.readFile(`${folder}/${file.name}`, (err, data) => {
-        if (err) {
-          console.error(err);
-        }
+      const stream = fs.ReadStream(`${folder}/${file.name}`);
+      stream.on('data', (data) => {
         if (i === 0) {
-          fs.appendFile(bundle, `${data}`, (err) => {
-            if (err) throw err;
-          });
+          fs.appendFile(bundle, `${data}`, () => {});
         } else {
-          fs.appendFile(bundle, `\n\n${data}`, (err) => {
-            if (err) throw err;
-          });
+          fs.appendFile(bundle, `\n\n${data}`, () => {});
         }
       });
     }
