@@ -55,23 +55,23 @@ fs.readFile(htmlFile, (err, buff) => {
   fs.writeFile(indexFile, buff, (err) => {
     if (err) throw err;
   });
-});
+  
+  const stream = fs.ReadStream(indexFile, 'utf-8');
+  stream.on('data', async text => {
+    let htmlText = text.toString();
+    let files = await fspromises.readdir(__dirname + '/components');
+    files.forEach(file => {
+      const componentStream = fs.ReadStream(__dirname + '/components' + '/' + file, 'utf-8');
+      componentStream.on('data', textFile => {
+        let componentName = file.split('.')[0];
+        let reg = new RegExp(`{{${componentName}}}`, 'g');
 
-const stream = fs.ReadStream(indexFile, 'utf-8');
-stream.on('data', async text => {
-  let htmlText = text.toString();
-  let files = await fspromises.readdir(__dirname + '/components');
-  files.forEach(file => {
-    const componentStream = fs.ReadStream(__dirname + '/components' + '/' + file, 'utf-8');
-    componentStream.on('data', textFile => {
-      let componentName = file.split('.')[0];
-      let reg = new RegExp(`{{${componentName}}}`, 'g');
-     
-      htmlText = htmlText.replace(reg, textFile.toString());
-    });
-    componentStream.on('end', () => {
-      fs.writeFile(indexFile, htmlText, (err) => {
-        if (err) throw err;
+        htmlText = htmlText.replace(reg, textFile.toString());
+      });
+      componentStream.on('end', () => {
+        fs.writeFile(indexFile, htmlText, (err) => {
+          if (err) throw err;
+        });
       });
     });
   });
