@@ -19,6 +19,6 @@ process.stdin.on('data', data => {
 
 
 process.on('SIGINT', () => {
-  console.log('Текс введен.');
+  console.log(' Текс введен.');
   process.exit();
 });
