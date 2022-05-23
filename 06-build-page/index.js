@@ -13,7 +13,7 @@ fs.mkdir('./06-build-page/project-dist/assets', { recursive: true }, err => {
   if (err) throw err;
 });
 
-fs.open(styleFile, 'a', (err) => {
+fs.writeFile(styleFile, '', (err) => {
   if (err) throw err;
 });
 
@@ -25,9 +25,7 @@ fs.readdir(styleFolder, { withFileTypes: true }, (err, files) => {
   files.forEach(file => {
     if (file.isFile() && file.name.includes('.css')) {
       fs.readFile(`${styleFolder}/${file.name}`, (err, data) => {
-        if (err) {
-          console.error(err);
-        }
+        if (err) throw err;
         fs.appendFile(styleFile, `\n\n${data}`, (err) => {
           if (err) throw err;
         });
@@ -35,6 +33,7 @@ fs.readdir(styleFolder, { withFileTypes: true }, (err, files) => {
     }
   });
 });
+
 
 let arrAssets = ['/fonts', '/img', '/svg'];
 
