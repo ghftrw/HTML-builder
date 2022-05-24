@@ -8,7 +8,7 @@ fs.open('./02-write-file/text.txt', 'a', (err) => {
 console.log('Введите текст: ');
 
 process.stdin.on('data', data => {
-  if (data.toString() === 'exit\r\n') {
+  if (data.toString().trim() === 'exit') {
     console.log('Текс введен.');
     process.exit();
   }
